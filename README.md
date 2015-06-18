@@ -3,8 +3,9 @@ node-7z
 
 [![Dependencies Status][david-image]][david-url] [![Build Status][travis-image]][travis-url] [![Code coverage][coveralls-image]][coveralls-url] [![Code quality][codeclimate-image]][codeclimate-url] [![Release][npm-image]][npm-url]
 
-> A Node.js wrapper for 7-Zip
+> A Node.js wrapper for 7-Zip, originally developed by @quentinrossetti and forked for the purpose of setting path to 7zip executable.
 
+Copy of original [README](https://github.com/quentinrossetti/node-7z/blob/master/README.md):
 Usage
 -----
 
