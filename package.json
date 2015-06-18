@@ -1,6 +1,6 @@
 {
   "name": "node-7z-esf",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A Node.js wrapper for 7-Zip, originally developed by https://github.com/quentinrossetti and forked for the purpose of setting path to 7zip executable.",
   "main": "lib/index.js",
   "scripts": {
