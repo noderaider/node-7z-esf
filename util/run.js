@@ -26,8 +26,8 @@ module.exports = function (command, switches) {
     var args = [ command.split(' ')[1] ];
     
     //<node-7z-esf>
-    if(gNode7zEsf && gNode7zEsf !== 'undefined'){
-      cmd = gNode7zEsf+cmd;
+    if(typeof global.gNode7zEsf !== 'undefined'){
+      cmd = global.gNode7zEsf+'/'+cmd;
     }
     //</node-7z-esf>
 
@@ -44,7 +44,7 @@ module.exports = function (command, switches) {
     }
 
     // Special treatment for the output switch because it is exposed as a
-    // parameter in the API and not as a option. Plus wilcards can be passed.
+    // parameter in the API and not as a option. Plus wildcards can be passed.
     var regexpOutput = /-o"((?:\\.|[^"\\])*)"/g;
     var output       = command.match(regexpOutput);
     if (output) {
