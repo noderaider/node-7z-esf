@@ -24,6 +24,12 @@ module.exports = function (command, switches) {
     }
     var cmd  = command.split(' ')[0];
     var args = [ command.split(' ')[1] ];
+    
+    //<node-7z-esf>
+    if(gNode7zEsf && gNode7zEsf !== 'undefined'){
+      cmd = gNode7zEsf+cmd;
+    }
+    //</node-7z-esf>
 
     // Parse and add command (non-switches parameters) to `args`.
     var regexpCommands = /"((?:\\.|[^"\\])*)"/g;
@@ -71,13 +77,14 @@ module.exports = function (command, switches) {
 
     // When an stdout is emitted, parse it. If an error is detected in the body
     // of the stdout create an new error with the 7-Zip error message as the
-    // error's message. Otherwise progress with stdout message.
+    // error's message. Otherwise progress with stdout message.    
     var err;
     var reg = new RegExp('Error:' + os.EOL + '?(.*)', 'g');
     var res = {
       cmd: cmd,
       args: args,
-      options: { stdio: 'pipe' } };
+      options: { stdio: 'pipe' } 
+    };
     // console.log('>>', res.cmd, res.args.join(' '));
     var run = spawn(res.cmd, res.args, res.options);
     run.stdout.on('data', function (data) {
