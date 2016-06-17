@@ -1,11 +1,9 @@
-'use strict';
-
-var path = require('path');
-var when = require('when');
-var u = {
+var path = require('path')
+var when = require('when')
+var u    = {
   run: require('../util/run'),
   switches: require('../util/switches')
-};
+}
 
 /**
  * Extract an archive with full paths.
@@ -21,8 +19,8 @@ module.exports = function (archive, dest, options) {
   return when.promise(function (resolve, reject, progress) {
 
     // Create a string that can be parsed by `run`.
-    var command = /(rar)$/i.test(archive) ? '7z ' : '7za ';
-    command += 'x "' + archive + '" -o"' + dest + '" ';
+    var command = (/(rar)$/i.test(archive))? '7z ' : '7za '
+    command += 'x "' + archive + '" -o"' + dest + '" '
 
     // Start the command
     u.run(command, options)
@@ -31,23 +29,24 @@ module.exports = function (archive, dest, options) {
     // the pattern is found, extract the file (or directory) name from it and
     // pass it to an array. Finally returns this array.
     .progress(function (data) {
-      var entries = [];
+      var entries = []
       data.split('\n').forEach(function (line) {
         if (line.substr(0, 12) === 'Extracting  ') {
-          entries.push(line.substr(12, line.length).replace(path.sep, '/'));
+          entries.push(line.substr(12, line.length).replace(path.sep, '/'))
         }
-      });
-      return progress(entries);
+      })
+      return progress(entries)
     })
 
     // When all is done resolve the Promise.
     .then(function (args) {
-      return resolve(args);
+      return resolve(args)
     })
 
     // Catch the error and pass it to the reject function of the Promise.
     .catch(function (err) {
-      return reject(err);
-    });
-  });
-};
+      return reject(err)
+    })
+
+  })
+}

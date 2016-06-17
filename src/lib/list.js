@@ -1,11 +1,9 @@
-'use strict';
-
-var path = require('path');
-var when = require('when');
-var u = {
+var path = require('path')
+var when = require('when')
+var u    = {
   run: require('../util/run'),
   switches: require('../util/switches')
-};
+}
 
 /**
  * List contents of archive.
@@ -19,14 +17,14 @@ var u = {
 module.exports = function (archive, options) {
   return when.promise(function (resolve, reject, progress) {
 
-    var spec = {};
+    var spec  = {}
     /* jshint maxlen: 130 */
-    var regex = /(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) ([\.DA]+) +(\d+)[ \d]+  (.+)/;
+    var regex = /(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) ([\.DA]+) +(\d+)[ \d]+  (.+)/
     /* jshint maxlen: 80 */
 
     // Create a string that can be parsed by `run`.
-    var command = /(rar)$/i.test(archive) ? '7z ' : '7za ';
-    command += 'l "' + archive + '" ';
+    var command = (/(rar)$/i.test(archive))? '7z ' : '7za '
+    command += 'l "' + archive + '" '
 
     // Start the command
     u.run(command, options)
@@ -35,47 +33,49 @@ module.exports = function (archive, options) {
     // the pattern is found, extract the file (or directory) name from it and
     // pass it to an array. Finally returns this array.
     .progress(function (data) {
-      var entries = [];
+      var entries = []
       data.split('\n').forEach(function (line) {
 
         // Populate the tech specs of the archive that are passed to the
         // resolve handler.
         if (line.substr(0, 7) === 'Path = ') {
-          spec.path = line.substr(7, line.length);
+          spec.path = line.substr(7, line.length)
         } else if (line.substr(0, 7) === 'Type = ') {
-          spec.type = line.substr(7, line.length);
+          spec.type = line.substr(7, line.length)
         } else if (line.substr(0, 9) === 'Method = ') {
-          spec.method = line.substr(9, line.length);
+          spec.method = line.substr(9, line.length)
         } else if (line.substr(0, 16) === 'Physical Size = ') {
-          spec.physicalSize = parseInt(line.substr(16, line.length), 10);
+          spec.physicalSize = parseInt(line.substr(16, line.length), 10)
         } else if (line.substr(0, 15) === 'Headers Size = ') {
-          spec.headersSize = parseInt(line.substr(15, line.length), 10);
+          spec.headersSize = parseInt(line.substr(15, line.length), 10)
         } else {
 
           // Parse the stdout to find entries
-          var res = regex.exec(line);
+          var res = regex.exec(line)
           if (res) {
             var e = {
               date: new Date(res[1]),
               attr: res[2],
               size: parseInt(res[3], 10),
               name: res[4].replace(path.sep, '/')
-            };
-            entries.push(e);
+            }
+            entries.push(e)
           }
+
         }
-      });
-      return progress(entries);
+      })
+      return progress(entries)
     })
 
     // When all is done resolve the Promise.
     .then(function () {
-      return resolve(spec);
+      return resolve(spec)
     })
 
     // Catch the error and pass it to the reject function of the Promise.
     .catch(function (err) {
-      return reject(err);
-    });
-  });
-};
+      return reject(err)
+    })
+
+  })
+}

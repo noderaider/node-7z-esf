@@ -1,12 +1,10 @@
-'use strict';
-
-var path = require('path');
-var when = require('when');
-var u = {
+var path = require('path')
+var when = require('when')
+var u    = {
   files: require('../util/files'),
   run: require('../util/run'),
   switches: require('../util/switches')
-};
+}
 
 /**
  * Add content to an archive.
@@ -18,18 +16,17 @@ var u = {
  * @progress {array} Listed files and directories.
  * @reject {Error} The error as issued by 7-Zip.
  */
-module.exports = function (archive, files) {
-  var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-  var exePath = options.exePath;
-  if (exePath) delete options.exePath;
+module.exports = function (archive, files, options = {}) {
+  const exePath = options.exePath
+  if(exePath)
+    delete options.exePath
   return when.promise(function (resolve, reject, progress) {
     // Convert array of files into a string if needed.
-    files = u.files(files);
+    files = u.files(files)
 
     // Create a string that can be parsed by `run`.
-    var command = exePath ? exePath : /(rar)$/i.test(archive) ? '7z ' : '7za ';
-    command += 'a "' + archive + '" ' + files;
+    var command = exePath ? exePath : (/(rar)$/i.test(archive))? '7z ' : '7za '
+    command += 'a "' + archive + '" ' + files
 
     // Start the command
     u.run(command, options)
@@ -38,23 +35,24 @@ module.exports = function (archive, files) {
     // the pattern is found, extract the file (or directory) name from it and
     // pass it to an array. Finally returns this array in the progress function.
     .progress(function (data) {
-      var entries = [];
+      var entries = []
       data.split('\n').forEach(function (line) {
         if (line.substr(0, 13) === 'Compressing  ') {
-          entries.push(line.substr(13, line.length).replace(path.sep, '/'));
+          entries.push(line.substr(13, line.length).replace(path.sep, '/'))
         }
-      });
-      return progress(entries);
+      })
+      return progress(entries)
     })
 
     // When all is done resolve the Promise.
     .then(function (args) {
-      return resolve(args);
+      return resolve(args)
     })
 
     // Catch the error and pass it to the reject function of the Promise.
     .catch(function (err) {
-      return reject(err);
-    });
-  });
-};
+      return reject(err)
+    })
+
+  })
+}

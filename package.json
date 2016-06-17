@@ -3,39 +3,97 @@
   "version": "0.4.1",
   "description": "An overhaul of node-7z.",
   "main": "lib/index.js",
-  "scripts": {
-    "test": "mocha",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha --dir .tmp/coverage",
-    "coveralls": "npm install coveralls && cat .tmp/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bondden/node-7z-esf.git/node-7zip.git"
-  },
   "keywords": [
     "esf",
     "node",
     "7zip",
     "wrapper"
   ],
-  "author": "Quentin Rossetti <quentin.rossetti@gmail.com>",
+  "scripts": {
+    "start": "run-p -lnc build-watch test-watch",
+    "clean": "run-p clean-lib clean-doc clean-test",
+    "clean-lib": "rimraf lib",
+    "clean-doc": "rimraf doc",
+    "clean-test": "rimraf coverage.lcov",
+    "prebuild": "npm run clean",
+    "build": "babel src -d .",
+    "build-watch": "npm run build -- --watch",
+    "pretest-mocha": "npm run build",
+    "test-mocha": "mocha --harmony --es_staging --require test/require",
+    "test-mocha-md": "mocha --harmony --es_staging --require test/require --reporter markdown | tee TEST.md",
+    "test": "nyc npm run test-mocha",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "test-watch": "npm run test-mocha -- --watch",
+    "md-create-readme": "cat md/README.md > README.md",
+    "md-insert-spacer": "cat md/SPACER.md >> README.md",
+    "md-insert-rule": "cat md/RULE.md >> README.md",
+    "md-insert-code": "cat md/CODE.md >> README.md",
+    "md-insert-test-header": "cat md/HEADER_TEST.md >> README.md",
+    "md-insert-test-content": "cat TEST.md >> README.md",
+    "md-insert-test": "run-s md-insert-test-header md-insert-test-content",
+    "md-insert-coverage-header": "cat md/HEADER_COVERAGE.md >> README.md",
+    "md-insert-coverage-content": "cat COVERAGE.md >> README.md",
+    "md-insert-coverage": "run-s md-insert-coverage-header md-insert-code md-insert-coverage-content md-insert-code",
+    "md-combine": "run-s -ln test-mocha-md md-create-readme md-insert-rule md-insert-test",
+    "preversion": "run-s -ln build test",
+    "version": "run-s -ln md-combine",
+    "release": "npm version patch",
+    "release:minor": "npm version minor",
+    "release:major": "npm version major",
+    "postversion": "npm publish",
+    "postpublish": "run-s -ln git-push release-gh-pages",
+    "prerelease-gh-pages": "npm run doc",
+    "release-gh-pages": "run-s gh-pages-subtree gh-pages-push gh-pages-delete",
+    "postrelease-gh-pages": "run-s -lnc clean-doc git-commit:doc && git push -u origin master --follow-tags",
+    "predoc": "rimraf doc",
+    "doc": "esdoc -c ./esdoc.json && ncp CNAME doc/CNAME",
+    "gh-pages-subtree": "git subtree split --prefix doc -b gh-pages",
+    "gh-pages-push": "git push -f origin gh-pages:gh-pages",
+    "gh-pages-delete": "git branch -D gh-pages",
+    "git-add": "git add -A",
+    "git-commit:doc": "git commit -am doc",
+    "git-push": "git push --follow-tags",
+    "upgrade": "ncu -a && npm update"
+  },
+  "dependencies": {
+    "chai": "^3.0.0",
+    "when": "^3.4.4",
+    "win-spawn": "^2.0.0",
+    "yargs": "^4.7.1"
+  },
+  "devDependencies": {
+    "babel-cli": "latest",
+    "babel-eslint": "latest",
+    "babel-preset-es2015": "latest",
+    "babel-preset-stage-0": "latest",
+    "babel-register": "latest",
+    "chai-as-promised": "^5.3.0",
+    "codecov": "latest",
+    "esdoc": "latest",
+    "esdoc-es7-plugin": "latest",
+    "eslint": "latest",
+    "eslint-plugin-react": "latest",
+    "fs-extra": "latest",
+    "mocha": "latest",
+    "mkdirp": "latest",
+    "npm-run-all": "latest",
+    "nyc": "latest",
+    "rewire": "latest",
+    "rimraf": "latest"
+  },
+  "author": "Cole Chamberlain <cole.chamberlain@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/noderaider/es-7z/issues"
+  },
   "contributors": [
+    "Quentin Rossetti <quentin.rossetti@gmail.com>",
     "HelloGravity",
     "bondden"
   ],
+  "homepage": "https://github.com/noderaider/es-7z",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bondden/node-7z-esf/issues"
-  },
-  "homepage": "https://github.com/bondden/node-7z-esf.git",
-  "dependencies": {
-    "when": "^3.4.4",
-    "win-spawn": "^2.0.0"
-  },
-  "devDependencies": {
-    "chai": "^1.9.1",
-    "fs-extra": "^0.11.0",
-    "istanbul": "^0.3.0",
-    "mocha": "^1.21.4"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noderaider/es-7z.git"
   }
 }

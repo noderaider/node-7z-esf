@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Transform an object of options into an array that can be passed to the
  * spawned child process.
@@ -9,24 +7,24 @@
 module.exports = function (switches) {
 
   // Default value for switches
-  switches = switches || {};
+  switches = switches || {}
 
-  var a = [];
+  var a = []
   // Set default values of boolean switches
-  switches.so = switches.so === true ? true : false;
-  switches.spl = switches.spl === true ? true : false;
-  switches.ssc = switches.ssc === false ? false : true;
-  switches.ssw = switches.ssw === true ? true : false;
-  switches.y = switches.y === false ? false : true;
+  switches.so  = (switches.so  === true)  ? true  : false
+  switches.spl = (switches.spl === true)  ? true  : false
+  switches.ssc = (switches.ssc === false) ? false : true
+  switches.ssw = (switches.ssw === true)  ? true  : false
+  switches.y   = (switches.y   === false) ? false : true
 
-  var s;
+  var s
   /*jshint forin:false*/
   for (s in switches) {
 
     // Switches that are set or not. Just add them to the array if they are
     // present. Differ the `ssc` switch treatment to later in the function.
     if (switches[s] === true && s !== 'ssc') {
-      a.push('-' + s);
+      a.push('-' + s)
     }
 
     // Switches with a value. Detect if the value contains a space. If it does
@@ -36,19 +34,22 @@ module.exports = function (switches) {
 
       // Special treatment for wilcards
       if (s === 'wildcards') {
-        a.unshift(switches.wildcards);
-      } else if (switches[s].indexOf(' ') === -1) {
-        a.push('-' + s + switches[s]);
+        a.unshift(switches.wildcards)
+      }
+      else if (switches[s].indexOf(' ') === -1) {
+        a.push('-' + s + switches[s])
       } else {
-        a.push('-' + s + '"' + switches[s] + '"');
+        a.push('-' + s + '"' + switches[s] + '"')
       }
     }
 
     // Special treatment for `-ssc`
     if (s === 'ssc') {
-      a.push(switches.ssc === true ? '-ssc' : '-ssc-');
+      a.push((switches.ssc === true) ? '-ssc' : '-ssc-')
     }
+
   }
 
-  return a;
-};
+  return a
+
+}
