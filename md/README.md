@@ -1,6 +1,6 @@
 # es-7z
 
-**Fork of node-7z, converted to ES modules and upgraded to support configurable path to 7-zip executable.**
+**Heavily reworked fork of node-7z by Quentin Rossetti that adds support for configurable 7zip path, much thanks to Quentin for doing all the hard work!**
 
 [![Build Status](https://travis-ci.org/noderaider/es-7z.svg?branch=master)](https://travis-ci.org/noderaider/es-7z)
 [![codecov](https://codecov.io/gh/noderaider/es-7z/branch/master/graph/badge.svg)](https://codecov.io/gh/noderaider/es-7z)
@@ -10,25 +10,24 @@
 
 ## Install
 
-`npm i -s es-7z`
+`npm i -S es-7z`
+
+## Differences from [node-7z](https://npmjs.com/packages/node-7z)
+
+* Library is all ES Module syntax, compiled with babel.
+* Tests are ES module syntax, compiled on the fly and run by mocha.
+* Every method export takes an optional `exePath` option which is expected to be a path to 7z.exe / 7za.exe. If omitted, the default in path will be attempted.
 
 
-## node-7z original readme
-
-[![Dependencies Status][david-image]][david-url] [![Build Status][travis-image]][travis-url] [![Code coverage][coveralls-image]][coveralls-url] [![Code quality][codeclimate-image]][codeclimate-url] [![Release][npm-image]][npm-url]
-
-> A Node.js wrapper for 7-Zip, originally developed by @quentinrossetti and forked for the purpose of setting path to 7zip executable.
-
-Copy of original [README](https://github.com/quentinrossetti/node-7z/blob/master/README.md):
-Usage
------
-
-I chose to use *Promises* in this library. API is consistent with standard use:
+## Usage
 
 ```js
-var Zip = require('node-7z'); // Name the class as you want!
-var myTask = new Zip();
-myTask.extractFull('myArchive.7z', 'destination', { p: 'myPassword' })
+import { extractFull7z } from 'es-7z'
+import path from 'path'
+
+const exePath = path.resolve(__dirname, '..', 'bin', '7za.exe')
+
+extractFull7z('myArchive.7z', 'destination', { exePath, p: 'myPassword' })
 
 // Equivalent to `on('data', function (files) { // ... });`
 .progress(function (files) {
@@ -50,7 +49,8 @@ Installation
 ------------
 
 You must have the `7za` executable available in your PATH or in the same
-directory of your `package.json` file.
+directory of your `package.json` file OR specify it as option exePath that is
+handed into each method.
 
 > On Debian an Ubuntu install the `p7zip-full` package.
 
@@ -59,9 +59,6 @@ directory of your `package.json` file.
 
 > On Mac OSX use Homebrew `brew install p7zip`
 
-```
-npm install --save node-7z
-```
 
 API
 ---
@@ -189,11 +186,11 @@ With the `7za` binary compression is made like that:
 7z a archive.7z *.exe -m0=BCJ -m1=LZMA:d=21
 ```
 
-With **node-7z** you can translate it like that:
+With **es-7z** you can translate it like that:
 
 ```js
-var archive = new Zip();
-archive.add('archive.7z', '*.exe', {
+import { add7z } from 'es-7z'
+add7z('archive.7z', '*.exe', {
   m0: '=BCJ',
   m1: '=LZMA:d=21'
 })
@@ -208,8 +205,8 @@ When adding, deleting or updating archives you can pass either a string or an
 array as second parameter (the `files` parameter).
 
 ```js
-var archive = new Zip();
-archive.delete('bigArchive.7z', [ 'file1', 'file2' ])
+import { delete7z } from 'es-7z'
+delete7z('bigArchive.7z', [ 'file1', 'file2' ])
 .then(function () {
   // Do stuff...
 });
@@ -222,8 +219,8 @@ this add a `wildcards` attribute to the `options` object. The `wildcard`
 attribute takes an *Array* as value. In this array each item is a wildcard.
 
 ```js
-var archive = new Zip();
-archive.extractFull('archive.zip', 'destination/', {
+import { extractFull7z } from 'es-7z'
+extractFull7z('archive.zip', 'destination/', {
   wildcards: [ '*.txt', '*.md' ], // extract all text and Markdown files
   r: true // in each subfolder too
 })
@@ -239,15 +236,13 @@ Note that the `r` (for recursive) attribute is passed in this example.
 
 
 ***
-With :heart: from [quentinrossetti](http://quentinrossetti.me/)
+With :heart: from [quentinrossetti](http://quentinrossetti.me/) and [Cole Chamberlain](https://github.com/cchamberlain)
 
-[david-url]: https://david-dm.org/quentinrossetti/node-7z
-[david-image]: http://img.shields.io/david/quentinrossetti/node-7z.svg
-[travis-url]: https://travis-ci.org/quentinrossetti/node-7z
-[travis-image]: http://img.shields.io/travis/quentinrossetti/node-7z.svg
-[codeclimate-url]: https://codeclimate.com/github/quentinrossetti/node-7z
-[codeclimate-image]: http://img.shields.io/codeclimate/github/quentinrossetti/node-7z.svg
-[coveralls-url]: https://coveralls.io/r/quentinrossetti/node-7z
-[coveralls-image]: http://img.shields.io/coveralls/quentinrossetti/node-7z.svg
-[npm-url]: https://www.npmjs.org/package/node-7z
-[npm-image]: http://img.shields.io/npm/v/node-7z.svg
+[david-url]: https://david-dm.org/noderaider/es-7z
+[david-image]: http://img.shields.io/david/noderaider/node-7z.svg
+[travis-url]: https://travis-ci.org/noderaider/node-7z
+[travis-image]: http://img.shields.io/travis/noderaider/node-7z.svg
+[codeclimate-url]: https://codeclimate.com/github/noderaider/node-7z
+[codeclimate-image]: http://img.shields.io/codeclimate/github/noderaider/node-7z.svg
+[npm-url]: https://www.npmjs.org/package/es-7z
+[npm-image]: http://img.shields.io/npm/v/es-7z.svg

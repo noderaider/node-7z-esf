@@ -4,7 +4,7 @@
  * @param  {string|array} files
  * @return {string}
  */
-module.exports = function (files) {
+export default function (files) {
 
   if (files === undefined) {
     return ''

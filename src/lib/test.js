@@ -1,9 +1,6 @@
-var path = require('path')
-var when = require('when')
-var u    = {
-  run: require('../util/run'),
-  switches: require('../util/switches')
-}
+import path from 'path'
+import when from 'when'
+import * as u from '../util'
 
 /**
  * Test integrity of archive.
@@ -14,12 +11,12 @@ var u    = {
  * @progress {array} Extracted files and directories.
  * @reject {Error} The error as issued by 7-Zip.
  */
-module.exports = function (archive, options) {
+export default function (archive, { exePath, ...options } = {}) {
   return when.promise(function (resolve, reject, progress) {
 
     // Create a string that can be parsed by `run`.
-    var command = (/(rar)$/i.test(archive))? '7z ' : '7za '
-    command += 't "' + archive + '"'
+    let command = exePath ? exePath : (/(rar)$/i.test(archive))? '7z' : '7za'
+    command += ' t "' + archive + '"'
 
     // Start the command
     u.run(command, options)

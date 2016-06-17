@@ -1,9 +1,6 @@
-var path = require('path')
-var when = require('when')
-var u = {
-  run: require('../util/run'),
-  switches: require('../util/switches')
-}
+import path from 'path'
+import when from 'when'
+import * as u from '../util'
 
 /**
  * Update content to an archive.
@@ -15,12 +12,12 @@ var u = {
  * @progress {array} Listed files and directories.
  * @reject {Error} The error as issued by 7-Zip.
  */
-module.exports = function (archive, files, options) {
+export default function (archive, files, { exePath, ...options } = {}) {
   return when.promise(function (resolve, reject, progress) {
 
     // Create a string that can be parsed by `run`.
-    var command = (/(rar)$/i.test(archive))? '7z ' : '7za '
-    command += 'u "' + archive + '" "' + files + '"'
+    let command = exePath ? exePath : (/(rar)$/i.test(archive))? '7z' : '7za'
+    command += ' u "' + archive + '" "' + files + '"'
 
     // Start the command
     u.run(command, options)

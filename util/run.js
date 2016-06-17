@@ -1,21 +1,11 @@
 'use strict';
 
-var os = require('os');
-var spawn = require('win-spawn');
-var when = require('when');
-var path = require('path');
-var utilSwitches = require('./switches');
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-/**
- * @promise Run
- * @param {string} command The command to run.
- * @param {Array} switches Options for 7-Zip as an array.
- * @progress {string} stdout message.
- * @reject {Error} The error issued by 7-Zip.
- * @reject {number} Exit code issued by 7-Zip.
- */
-module.exports = function (command, switches) {
-  return when.promise(function (fulfill, reject, progress) {
+exports.default = function (command, switches) {
+  return _when2.default.promise(function (fulfill, reject, progress) {
 
     // Parse the command variable. If the command is not a string reject the
     // Promise. Otherwise transform the command into two variables: the command
@@ -29,7 +19,7 @@ module.exports = function (command, switches) {
     var exePath = process.env.ES_7Z;
     if (exePath) {
       console.info('using ES_7Z path at ' + exePath);
-      cmd = path.resolve(exePath, cmd);
+      cmd = _path2.default.resolve(exePath, cmd);
     }
 
     // Parse and add command (non-switches parameters) to `args`.
@@ -37,9 +27,9 @@ module.exports = function (command, switches) {
     var commands = command.match(regexpCommands);
     if (commands) {
       commands.forEach(function (c) {
-        c = c.replace(/\//, path.sep);
-        c = c.replace(/\\/, path.sep);
-        c = path.normalize(c);
+        c = c.replace(/\//, _path2.default.sep);
+        c = c.replace(/\\/, _path2.default.sep);
+        c = _path2.default.normalize(c);
         args.push(c);
       });
     }
@@ -51,15 +41,15 @@ module.exports = function (command, switches) {
     if (output) {
       args.pop();
       var o = output[0];
-      o = o.replace(/\//, path.sep);
-      o = o.replace(/\\/, path.sep);
+      o = o.replace(/\//, _path2.default.sep);
+      o = o.replace(/\\/, _path2.default.sep);
       o = o.replace(/"/g, '');
-      o = path.normalize(o);
+      o = _path2.default.normalize(o);
       args.push(o);
     }
 
     // Add switches to the `args` array.
-    var switchesArray = utilSwitches(switches);
+    var switchesArray = (0, _switches2.default)(switches);
     switchesArray.forEach(function (s) {
       args.push(s);
     });
@@ -82,14 +72,14 @@ module.exports = function (command, switches) {
     // of the stdout create an new error with the 7-Zip error message as the
     // error's message. Otherwise progress with stdout message.
     var err;
-    var reg = new RegExp('Error:' + os.EOL + '?(.*)', 'g');
+    var reg = new RegExp('Error:' + _os2.default.EOL + '?(.*)', 'g');
     var res = {
       cmd: cmd,
       args: args,
       options: { stdio: 'pipe' }
     };
     // console.log('>>', res.cmd, res.args.join(' '));
-    var run = spawn(res.cmd, res.args, res.options);
+    var run = (0, _winSpawn2.default)(res.cmd, res.args, res.options);
     run.stdout.on('data', function (data) {
       var res = reg.exec(data.toString());
       if (res) {
@@ -105,3 +95,25 @@ module.exports = function (command, switches) {
     });
   });
 };
+
+var _os = require('os');
+
+var _os2 = _interopRequireDefault(_os);
+
+var _winSpawn = require('win-spawn');
+
+var _winSpawn2 = _interopRequireDefault(_winSpawn);
+
+var _when = require('when');
+
+var _when2 = _interopRequireDefault(_when);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _switches = require('./switches');
+
+var _switches2 = _interopRequireDefault(_switches);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

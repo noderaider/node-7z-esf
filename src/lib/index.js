@@ -1,11 +1,7 @@
-var Zip = function () {}
-
-Zip.prototype.add = require('./add')
-Zip.prototype.delete = require('./delete')
-Zip.prototype.extract = require('./extract')
-Zip.prototype.extractFull = require('./extractFull')
-Zip.prototype.list = require('./list')
-Zip.prototype.test = require('./test')
-Zip.prototype.update = require('./update')
-
-module.exports = Zip
+export { default as add7z } from './add'
+export { default as delete7z } from './delete'
+export { default as extract7z } from './extract'
+export { default as extractFull7z } from './extractFull'
+export { default as list7z } from './list'
+export { default as test7z } from './test'
+export { default as update7z } from './update'

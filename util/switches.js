@@ -1,12 +1,10 @@
 'use strict';
 
-/**
- * Transform an object of options into an array that can be passed to the
- * spawned child process.
- * @param  {Object} switches An object of options
- * @return {array} Array to pass to the `roptsun` function.
- */
-module.exports = function (switches) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (switches) {
 
   // Default value for switches
   switches = switches || {};

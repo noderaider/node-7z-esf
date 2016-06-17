@@ -4,7 +4,7 @@
  * @param  {Object} switches An object of options
  * @return {array} Array to pass to the `roptsun` function.
  */
-module.exports = function (switches) {
+export default function (switches) {
 
   // Default value for switches
   switches = switches || {}

@@ -1,24 +1,17 @@
-/*global describe, it */
-'use strict';
-var expect = require('chai').expect;
-var Zip    = require('../../lib');
+import * as zip from '../../lib'
+const should = require('chai').should()
 
-describe('Class: `Zip`', function () {
-
-  it('should be a class', function () {
-    var zip = new Zip();
-    expect(zip).to.be.an.instanceof(Zip);
-  });
+describe('zip', function () {
+  it('should exist', () => should.exist(zip))
+  it('should be an object', () => zip.should.be.an('object'))
 
   it('should respond to 7-Zip commands as methods', function () {
-    var zip = new Zip();
-    expect(zip).to.respondTo('add');
-    expect(zip).to.respondTo('delete');
-    expect(zip).to.respondTo('extract');
-    expect(zip).to.respondTo('extractFull');
-    expect(zip).to.respondTo('list');
-    expect(zip).to.respondTo('test');
-    expect(zip).to.respondTo('update');
-  });
-
-});
+    zip.should.respondTo('add7z')
+    zip.should.respondTo('delete7z')
+    zip.should.respondTo('extract7z')
+    zip.should.respondTo('extractFull7z')
+    zip.should.respondTo('list7z')
+    zip.should.respondTo('test7z')
+    zip.should.respondTo('update7z')
+  })
+})

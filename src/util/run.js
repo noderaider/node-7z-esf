@@ -1,8 +1,8 @@
-var os    = require('os')
-var spawn = require('win-spawn')
-var when  = require('when')
-var path  = require('path')
-var utilSwitches = require('./switches')
+import os from 'os'
+import spawn from 'win-spawn'
+import when from 'when'
+import path from 'path'
+import utilSwitches from './switches'
 
 /**
  * @promise Run
@@ -12,7 +12,7 @@ var utilSwitches = require('./switches')
  * @reject {Error} The error issued by 7-Zip.
  * @reject {number} Exit code issued by 7-Zip.
  */
-module.exports = function (command, switches) {
+export default function (command, switches) {
   return when.promise(function (fulfill, reject, progress) {
 
     // Parse the command variable. If the command is not a string reject the
