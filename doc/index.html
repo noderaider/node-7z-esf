@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/noderaider/es-7z.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="es-7z">es-7z</h1>
+<p><strong>Fork of node-7z, converted to ES modules and upgraded to support configurable path to 7-zip executable.</strong></p>
+<p><a href="https://travis-ci.org/noderaider/es-7z"><img src="https://travis-ci.org/noderaider/es-7z.svg?branch=master" alt="Build Status"></a>
+<a href="https://codecov.io/gh/noderaider/es-7z"><img src="https://codecov.io/gh/noderaider/es-7z/branch/master/graph/badge.svg" alt="codecov"></a></p>
+<p><a href="https://nodei.co/npm/es-7z/"><img src="https://nodei.co/npm/es-7z.png?stars=true&amp;downloads=true" alt="NPM"></a></p>
+<h2 id="install">Install</h2>
+<p><code>npm i -s es-7z</code></p>
+<h2 id="node-7z-original-readme">node-7z original readme</h2>
+<p><a href="https://david-dm.org/quentinrossetti/node-7z"><img src="http://img.shields.io/david/quentinrossetti/node-7z.svg" alt="Dependencies Status"></a> <a href="https://travis-ci.org/quentinrossetti/node-7z"><img src="http://img.shields.io/travis/quentinrossetti/node-7z.svg" alt="Build Status"></a> <a href="https://coveralls.io/r/quentinrossetti/node-7z"><img src="http://img.shields.io/coveralls/quentinrossetti/node-7z.svg" alt="Code coverage"></a> <a href="https://codeclimate.com/github/quentinrossetti/node-7z"><img src="http://img.shields.io/codeclimate/github/quentinrossetti/node-7z.svg" alt="Code quality"></a> <a href="https://www.npmjs.org/package/node-7z"><img src="http://img.shields.io/npm/v/node-7z.svg" alt="Release"></a></p>
+<blockquote>
+<p>A Node.js wrapper for 7-Zip, originally developed by @quentinrossetti and forked for the purpose of setting path to 7zip executable.</p>
+</blockquote>
+<p>Copy of original <a href="https://github.com/quentinrossetti/node-7z/blob/master/README.md">README</a>:</p>
+<h2 id="usage">Usage</h2>
+<p>I chose to use <em>Promises</em> in this library. API is consistent with standard use:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var Zip = require(&apos;node-7z&apos;); // Name the class as you want!
+var myTask = new Zip();
+myTask.extractFull(&apos;myArchive.7z&apos;, &apos;destination&apos;, { p: &apos;myPassword&apos; })
+
+// Equivalent to `on(&apos;data&apos;, function (files) { // ... });`
+.progress(function (files) {
+  console.log(&apos;Some files are extracted: %s&apos;, files);
+});
+
+// When all is done
+.then(function () {
+  console.log(&apos;Extracting done!&apos;);
+});
+
+// On error
+.catch(function (err) {
+  console.error(err);
+});</code>
+</code></pre>
+<h2 id="installation">Installation</h2>
+<p>You must have the <code>7za</code> executable available in your PATH or in the same
+directory of your <code>package.json</code> file.</p>
+<blockquote>
+<p>On Debian an Ubuntu install the <code>p7zip-full</code> package.</p>
+<p>On Windows use the <code>7za.exe</code> (<a href="http://netcologne.dl.sourceforge.net/project/sevenzip/7-Zip/9.20/7za920.zip">link here</a>)
+binary.</p>
+<p>On Mac OSX use Homebrew <code>brew install p7zip</code></p>
+</blockquote>
+<pre><code><code class="source-code prettyprint">npm install --save node-7z</code>
+</code></pre><h2 id="api">API</h2>
+<blockquote>
+<p>See the <a href="http://sevenzip.sourceforge.jp/chm/cmdline/index.htm">7-Zip documentation</a>
+for the full list of usages and options (switches).</p>
+<p>The type of the list of files can be either <em>String</em> or <em>Array</em>.</p>
+</blockquote>
+<h3 id="add-zip-add-">Add: <code>Zip.add</code></h3>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>archive</code> Path to the archive you want to create.</li>
+<li><code>files</code> The file list to add.</li>
+<li><code>options</code> An object of options (7-Zip switches).</li>
+</ul>
+<p><strong>Progress</strong></p>
+<ul>
+<li><code>files</code> A array of all the extracted files <em>AND</em> directories. The <code>/</code>
+character is used as a path separator on every platform.</li>
+</ul>
+<p><strong>Error</strong></p>
+<ul>
+<li><code>err</code> An Error object.</li>
+</ul>
+<h3 id="delete-zip-delete-">Delete: <code>Zip.delete</code></h3>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>archive</code> Path to the archive you want to delete files from.</li>
+<li><code>files</code> The file list to delete.</li>
+<li><code>options</code> An object of options (7-Zip switches).</li>
+</ul>
+<p><strong>Error</strong></p>
+<ul>
+<li><code>err</code> An Error object.</li>
+</ul>
+<h3 id="extract-zip-extract-">Extract: <code>Zip.extract</code></h3>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>archive</code> The path to the archive you want to extract.</li>
+<li><code>dest</code> Where to extract the archive.</li>
+<li><code>options</code> An object of options.</li>
+</ul>
+<p><strong>Progress</strong></p>
+<ul>
+<li><code>files</code> A array of all the extracted files <em>AND</em> directories. The <code>/</code>
+character is used as a path separator on every platform.</li>
+</ul>
+<p><strong>Error</strong></p>
+<ul>
+<li><code>err</code> An Error object.</li>
+</ul>
+<h3 id="extract-with-full-paths-zip-extractfull-">Extract with full paths: <code>Zip.extractFull</code></h3>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>archive</code> The path to the archive you want to extract.</li>
+<li><code>dest</code> Where to extract the archive (creates folders for you).</li>
+<li><code>options</code> An object of options.</li>
+</ul>
+<p><strong>Progress</strong></p>
+<ul>
+<li><code>files</code> A array of all the extracted files <em>AND</em> directories. The <code>/</code>
+character is used as a path separator on every platform.</li>
+</ul>
+<p><strong>Error</strong></p>
+<ul>
+<li><code>err</code> An Error object.</li>
+</ul>
+<h3 id="list-contents-of-archive-zip-list-">List contents of archive: <code>Zip.list</code></h3>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>archive</code> The path to the archive you want to analyse.</li>
+<li><code>options</code> An object of options.</li>
+</ul>
+<p><strong>Progress</strong></p>
+<ul>
+<li><code>files</code> A array of objects of all the extracted files <em>AND</em> directories.
+The <code>/</code> character is used as a path separator on every platform. Object&apos;s
+properties are: <code>date</code>, <code>attr</code>, <code>size</code> and <code>name</code>.</li>
+</ul>
+<p><strong>Fulfill</strong></p>
+<ul>
+<li><code>spec</code> An object of tech spec about the archive. Properties are: <code>path</code>,
+<code>type</code>, <code>method</code>, <code>physicalSize</code> and <code>headersSize</code> (Some of them may be
+missing with non-7z archives).</li>
+</ul>
+<p><strong>Error</strong></p>
+<ul>
+<li><code>err</code> An Error object.</li>
+</ul>
+<h3 id="test-integrity-of-archive-zip-test-">Test integrity of archive: <code>Zip.test</code></h3>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>archive</code> The path to the archive you want to analyse.</li>
+<li><code>options</code> An object of options.</li>
+</ul>
+<p><strong>Progress</strong></p>
+<ul>
+<li><code>files</code> A array of all the extracted files <em>AND</em> directories. The <code>/</code>
+character is used as a path separator on every platform.</li>
+</ul>
+<p><strong>Error</strong></p>
+<ul>
+<li><code>err</code> An Error object.</li>
+</ul>
+<h3 id="update-zip-update-">Update: <code>Zip.update</code></h3>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>archive</code> Path to the archive you want to update.</li>
+<li><code>files</code> The file list to update.</li>
+<li><code>options</code> An object of options (7-Zip switches).</li>
+</ul>
+<p><strong>Progress</strong></p>
+<ul>
+<li><code>files</code> A array of all the extracted files <em>AND</em> directories. The <code>/</code>
+character is used as a path separator on every platform.</li>
+</ul>
+<p><strong>Error</strong></p>
+<ul>
+<li><code>err</code> An Error object.</li>
+</ul>
+<h2 id="advanced-usage">Advanced usage</h2>
+<h3 id="compression-method">Compression method</h3>
+<p>With the <code>7za</code> binary compression is made like that:</p>
+<pre><code class="lang-bat"><code class="source-code prettyprint"># adds *.exe and *.dll files to solid archive archive.7z using LZMA method
+# with 2 MB dictionary and BCJ filter.
+7z a archive.7z *.exe -m0=BCJ -m1=LZMA:d=21</code>
+</code></pre>
+<p>With <strong>node-7z</strong> you can translate it like that:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var archive = new Zip();
+archive.add(&apos;archive.7z&apos;, &apos;*.exe&apos;, {
+  m0: &apos;=BCJ&apos;,
+  m1: &apos;=LZMA:d=21&apos;
+})
+.then(function () {
+  // Do stuff...
+});</code>
+</code></pre>
+<h3 id="add-delete-and-update-multiple-files">Add, delete and update multiple files</h3>
+<p>When adding, deleting or updating archives you can pass either a string or an
+array as second parameter (the <code>files</code> parameter).</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var archive = new Zip();
+archive.delete(&apos;bigArchive.7z&apos;, [ &apos;file1&apos;, &apos;file2&apos; ])
+.then(function () {
+  // Do stuff...
+});</code>
+</code></pre>
+<h3 id="wildcards">Wildcards</h3>
+<p>You can extract with wildcards to specify one or more file extensions. To do
+this add a <code>wildcards</code> attribute to the <code>options</code> object. The <code>wildcard</code>
+attribute takes an <em>Array</em> as value. In this array each item is a wildcard.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var archive = new Zip();
+archive.extractFull(&apos;archive.zip&apos;, &apos;destination/&apos;, {
+  wildcards: [ &apos;*.txt&apos;, &apos;*.md&apos; ], // extract all text and Markdown files
+  r: true // in each subfolder too
+})
+.progress(function (files) {
+  // Do stuff with files...
+})
+.then(function () {
+  // Do stuff...
+});</code>
+</code></pre>
+<p>Note that the <code>r</code> (for recursive) attribute is passed in this example.</p>
+<hr>
+<p>With :heart: from <a href="http://quentinrossetti.me/">quentinrossetti</a></p>
+<hr>
+<h2 id="test">TEST</h2>
+<p><strong>Unit tests output for current release:</strong></p>
+<h1 id="toc">TOC</h1>
+<ul>
+<li><a href="#method-zipadd">Method: <code>Zip.add</code></a></li>
+<li><a href="#method-zipdelete">Method: <code>Zip.delete</code></a></li>
+<li><a href="#method-zipextract">Method: <code>Zip.extract</code></a></li>
+<li><a href="#method-zipextractfull">Method: <code>Zip.extractFull</code></a></li>
+<li><a href="#method-ziplist">Method: <code>Zip.list</code></a></li>
+<li><a href="#method-ziptest">Method: <code>Zip.test</code></a></li>
+<li><a href="#method-zipupdate">Method: <code>Zip.update</code></a></li>
+<li><a href="#class-zip">Class: <code>Zip</code></a></li>
+<li><a href="#utility-files">Utility: <code>files</code></a></li>
+<li><a href="#utility-run">Utility: <code>run</code></a></li>
+<li><a href="#utility-switches">Utility: <code>switches</code></a>
+<a name=""></a></li>
+</ul>
+<p><a name="method-zipadd"></a></p>
+<h1 id="method-zip-add-">Method: <code>Zip.add</code></h1>
+<p>should return an error on 7z error.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">add(&apos;.tmp/test/addnot.7z&apos;, &apos;.tmp/test/nothere&apos;, { &apos;???&apos;: true }).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return entries on progress.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">add(&apos;.tmp/test/add.zip&apos;, &apos;*.md&apos;).progress(function (entries) {
+  expect(entries.length).to.be.at.least(1);
+  done();
+});</code>
+</code></pre>
+<p><a name="method-zipdelete"></a></p>
+<h1 id="method-zip-delete-">Method: <code>Zip.delete</code></h1>
+<p>should return an error on 7z error.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">del(&apos;.tmp/test/addnot.7z&apos;, &apos;.tmp/test/nothere&apos;, { &apos;???&apos;: true }).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return on fulfillment.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">fs.copySync(&apos;test/zip.7z&apos;, &apos;.tmp/test/copy.7z&apos;);
+del(&apos;.tmp/test/copy.7z&apos;, &apos;*.txt&apos;).then(function () {
+  done();
+});</code>
+</code></pre>
+<p>should accept array as source.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">fs.copySync(&apos;test/zip.7z&apos;, &apos;.tmp/d.7z&apos;);
+del(&apos;.tmp/d.7z&apos;, [&apos;zip/file0.txt&apos;, &apos;zip/file1.txt&apos;]).then(function () {
+  extract(&apos;.tmp/d.7z&apos;, &apos;.tmp/d&apos;).then(function () {
+    var files = fs.readdirSync(&apos;.tmp/d/zip&apos;);
+    expect(files).not.to.contain(&apos;file0.txt&apos;);
+    expect(files).not.to.contain(&apos;file1.txt&apos;);
+    expect(files).to.contain(&apos;file2.txt&apos;);
+    expect(files).to.contain(&apos;folder&apos;);
+    done();
+  });
+});</code>
+</code></pre>
+<p><a name="method-zipextract"></a></p>
+<h1 id="method-zip-extract-">Method: <code>Zip.extract</code></h1>
+<p>should return an error on 7z error.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extract(&apos;test/nothere.7z&apos;, &apos;.tmp/test&apos;).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return an error on output duplticate.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extract(&apos;test/zip.7z&apos;, &apos;.tmp/test&apos;, { o: &apos;.tmp/test/duplicate&apos; }).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return entries on progress.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extract(&apos;test/zip.7z&apos;, &apos;.tmp/test&apos;).progress(function (entries) {
+  expect(entries.length).to.be.at.least(1);
+  done();
+});</code>
+</code></pre>
+<p>should extract on the right path.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extract(&apos;test/zip.7z&apos;, &apos;.tmp/test&apos;).then(function () {
+  expect(fs.existsSync(&apos;.tmp/test/file0.txt&apos;)).to.be.eql(true);
+  expect(fs.existsSync(&apos;.tmp/test/file1.txt&apos;)).to.be.eql(true);
+  expect(fs.existsSync(&apos;.tmp/test/file2.txt&apos;)).to.be.eql(true);
+  expect(fs.existsSync(&apos;.tmp/test/file3.txt&apos;)).to.be.eql(true);
+  done();
+});</code>
+</code></pre>
+<p><a name="method-zipextractfull"></a></p>
+<h1 id="method-zip-extractfull-">Method: <code>Zip.extractFull</code></h1>
+<p>should return an error on 7z error.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extractFull(&apos;test/nothere.7z&apos;, &apos;.tmp/test&apos;).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return an error on output duplicate.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extractFull(&apos;test/zip.7z&apos;, &apos;.tmp/test&apos;, { o: &apos;.tmp/test/duplicate&apos; }).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return entries on progress.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extractFull(&apos;test/zip.7z&apos;, &apos;.tmp/test&apos;).progress(function (entries) {
+  expect(entries.length).to.be.at.least(1);
+  done();
+});</code>
+</code></pre>
+<p>should extract on the right path.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extractFull(&apos;test/zip.7z&apos;, &apos;.tmp/test&apos;).then(function () {
+  expect(fs.existsSync(&apos;.tmp/test/zip&apos;)).to.be.eql(true);
+  done();
+});</code>
+</code></pre>
+<p>should extract only given wilcards.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extractFull(&apos;test/wildcards.zip&apos;, &apos;.tmp/test/&apos;, { wildcards: [&apos;*.txt&apos;], r: true }).progress(function (files) {
+  files.forEach(function (f) {
+    expect(f).to.include(&apos;.txt&apos;);
+  });
+}).then(function () {
+  done();
+}).catch(function (err) {
+  done(err);
+});</code>
+</code></pre>
+<p>should work with spaces in archive name.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extractFull(&apos;test/zip spaces test.7z&apos;, &apos;.tmp/test spaces one&apos;).then(function () {
+  expect(fs.existsSync(&apos;.tmp/test spaces one/zip&apos;)).to.be.eql(true);
+  done();
+});</code>
+</code></pre>
+<p>should work with spaces in destination.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">extractFull(&apos;test/zip.7z&apos;, &apos;.tmp/test spaces agai n&apos;).then(function () {
+  expect(fs.existsSync(&apos;.tmp/test spaces agai n/zip&apos;)).to.be.eql(true);
+  done();
+});</code>
+</code></pre>
+<p>should work with spaces in both source and destination.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">/*jshint maxlen:false*/
+fs.copySync(&apos;test/zip.7z&apos;, &apos;.tmp/test/Folder From/Folder A/Folder B/Folder C/zip file.7z&apos;);
+extractFull(&apos;.tmp/test/Folder From/Folder A/Folder B/Folder C/zip file.7z&apos;, &apos;.tmp/test/Folder To/Folder D/Folder E/Folder F&apos;).then(function () {
+  expect(fs.existsSync(&apos;.tmp/test/Folder To/Folder D/Folder E/Folder F/zip&apos;)).to.be.eql(true);
+  done();
+});</code>
+</code></pre>
+<p><a name="method-ziplist"></a></p>
+<h1 id="method-zip-list-">Method: <code>Zip.list</code></h1>
+<p>should return an error on 7z error.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">list(&apos;test/nothere.7z&apos;).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return an tech spec on fulfill.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">list(&apos;test/zip.7z&apos;, { r: true }).then(function (spec) {
+  expect(spec).to.have.property(&apos;path&apos;);
+  expect(spec).to.have.property(&apos;type&apos;);
+  expect(spec).to.have.property(&apos;method&apos;);
+  expect(spec).to.have.property(&apos;physicalSize&apos;);
+  expect(spec).to.have.property(&apos;headersSize&apos;);
+  done();
+});</code>
+</code></pre>
+<p>should return valid entries on progress.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">list(&apos;test/zip.zip&apos;).progress(function (entries) {
+  expect(entries.length).to.be.at.least(1);
+  expect(entries[0].date).to.be.an.instanceof(Date);
+  expect(entries[0].attr.length).to.eql(5);
+  expect(entries[0].name).to.be.a(&apos;string&apos;);
+  expect(entries[0].name).to.not.contain(&apos;\\&apos;);
+  done();
+});</code>
+</code></pre>
+<p><a name="method-ziptest"></a></p>
+<h1 id="method-zip-test-">Method: <code>Zip.test</code></h1>
+<p>should return an error on 7z error.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">test(&apos;test/nothere.7z&apos;).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return entries on progress.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">test(&apos;test/zip.7z&apos;, { r: true }).progress(function (entries) {
+  expect(entries.length).to.be.at.least(1);
+  done();
+});</code>
+</code></pre>
+<p><a name="method-zipupdate"></a></p>
+<h1 id="method-zip-update-">Method: <code>Zip.update</code></h1>
+<p>should return an error on 7z error.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">update(&apos;.tmp/test/addnot.7z&apos;, &apos;.tmp/test/nothere&apos;, { &apos;???&apos;: true }).catch(function (err) {
+  expect(err).to.be.an.instanceof(Error);
+  done();
+});</code>
+</code></pre>
+<p>should return entries on progress.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">fs.copySync(&apos;test/zip.7z&apos;, &apos;.tmp/test/update.7z&apos;);
+update(&apos;.tmp/test/update.7z&apos;, &apos;*.md&apos;, { w: &apos;test&apos; }).progress(function (entries) {
+  expect(entries.length).to.be.at.least(1);
+  done();
+});</code>
+</code></pre>
+<p>should return on fulfillment.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">fs.copySync(&apos;test/zip.7z&apos;, &apos;.tmp/test/update.7z&apos;);
+update(&apos;.tmp/test/update.7z&apos;, &apos;*.txt&apos;).then(function () {
+  done();
+});</code>
+</code></pre>
+<p><a name="class-zip"></a></p>
+<h1 id="class-zip-">Class: <code>Zip</code></h1>
+<p>should be a class.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var zip = new Zip();
+expect(zip).to.be.an.instanceof(Zip);</code>
+</code></pre>
+<p>should respond to 7-Zip commands as methods.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var zip = new Zip();
+expect(zip).to.respondTo(&apos;add&apos;);
+expect(zip).to.respondTo(&apos;delete&apos;);
+expect(zip).to.respondTo(&apos;extract&apos;);
+expect(zip).to.respondTo(&apos;extractFull&apos;);
+expect(zip).to.respondTo(&apos;list&apos;);
+expect(zip).to.respondTo(&apos;test&apos;);
+expect(zip).to.respondTo(&apos;update&apos;);</code>
+</code></pre>
+<p><a name="utility-files"></a></p>
+<h1 id="utility-files-">Utility: <code>files</code></h1>
+<p>should error on invalid files.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var r = files();
+expect(r).to.eql(&apos;&apos;);</code>
+</code></pre>
+<p>should works with strings.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var r = files(&apos;hello test&apos;);
+expect(r).to.eql(&apos;&quot;hello test&quot;&apos;);</code>
+</code></pre>
+<p>should works with arrays.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var r = files([&apos;hello test&apos;, &apos;hello world&apos;]);
+expect(r).to.eql(&apos;&quot;hello test&quot; &quot;hello world&quot;&apos;);</code>
+</code></pre>
+<p><a name="utility-run"></a></p>
+<h1 id="utility-run-">Utility: <code>run</code></h1>
+<p>should return an error with invalid command type.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">run(0).catch(function (err) {
+  expect(err.message).to.eql(&apos;Command must be a string&apos;);
+  done();
+});</code>
+</code></pre>
+<p>should return an error on when 7z gets one.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">run(&apos;7za &quot;???&quot;&apos;).catch(function (err) {
+  expect(err.message).to.eql(&apos;Incorrect command line&apos;);
+  done();
+});</code>
+</code></pre>
+<p>should return an stdout on progress.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">run(&apos;7za&apos;, { h: true }).progress(function (data) {
+  expect(data).to.be.a(&apos;string&apos;);
+}).then(function () {
+  done();
+});</code>
+</code></pre>
+<p>should correctly parse complex commands.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">run(&apos;7za a &quot;.tmp/test/archive.7z&quot; &quot;*.exe&quot; &quot;*.dll&quot;&apos;, {
+  m0: &apos;=BCJ&apos;,
+  m1: &apos;=LZMA:d=21&apos;
+}).then(function (res) {
+  expect(res).to.contain(&apos;a&apos;);
+  expect(res).to.contain(&apos;.tmp&apos; + sep + &apos;test&apos; + sep + &apos;archive.7z&apos;);
+  expect(res).to.contain(&apos;*.exe&apos;);
+  expect(res).to.contain(&apos;*.dll&apos;);
+  expect(res).to.contain(&apos;-m0=BCJ&apos;);
+  expect(res).to.contain(&apos;-m1=LZMA:d=21&apos;);
+  expect(res).to.contain(&apos;-ssc&apos;);
+  expect(res).to.contain(&apos;-y&apos;);
+  done();
+});</code>
+</code></pre>
+<p>should correctly parse complex commands with spaces.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">run(&apos;7za a &quot;.tmp/Folder A/Folder B\\archive.7z&quot; &quot;*.exe&quot; &quot;*.dll&quot;&apos;, {
+  m0: &apos;=BCJ&apos;,
+  m1: &apos;=LZMA:d=21&apos;,
+  p: &apos;My mhjls/\\c $^&#xE9;5&#xB0;&apos;
+}).then(function (res) {
+  expect(res).to.contain(&apos;a&apos;);
+  /*jshint maxlen:false*/
+  expect(res).to.contain(&apos;.tmp&apos; + sep + &apos;Folder A&apos; + sep + &apos;Folder B&apos; + sep + &apos;archive.7z&apos;);
+  expect(res).to.contain(&apos;*.exe&apos;);
+  expect(res).to.contain(&apos;*.dll&apos;);
+  expect(res).to.contain(&apos;-m0=BCJ&apos;);
+  expect(res).to.contain(&apos;-m1=LZMA:d=21&apos;);
+  expect(res).to.contain(&apos;-p&quot;My mhjls/\\c $^&#xE9;5&#xB0;&quot;&apos;);
+  expect(res).to.contain(&apos;-ssc&apos;);
+  expect(res).to.contain(&apos;-y&apos;);
+  done();
+});</code>
+</code></pre>
+<p><a name="utility-switches"></a></p>
+<h1 id="utility-switches-">Utility: <code>switches</code></h1>
+<p>should return deflaut flags with no args.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">expect(switches({})).to.contain(&apos;-ssc&apos;);
+expect(switches({})).to.contain(&apos;-y&apos;);</code>
+</code></pre>
+<p>should return -ssc with flag { ssc: true }.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">expect(switches({ ssc: true })).to.contain(&apos;-ssc&apos;);
+expect(switches({ ssc: true })).to.contain(&apos;-y&apos;);</code>
+</code></pre>
+<p>should return -ssc- with flag { ssc: false }.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">expect(switches({ ssc: false })).to.contain(&apos;-ssc-&apos;);</code>
+</code></pre>
+<p>should return non default booleans when specified.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var r = switches({
+  so: true,
+  spl: true,
+  ssw: true,
+  y: false
+});
+expect(r).to.contain(&apos;-so&apos;);
+expect(r).to.contain(&apos;-spl&apos;);
+expect(r).to.contain(&apos;-ssc&apos;);
+expect(r).to.contain(&apos;-ssw&apos;);
+expect(r).not.to.contain(&apos;-y&apos;);</code>
+</code></pre>
+<p>should return complex values when needed.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var r = switches({
+  ssc: true,
+  ssw: true,
+  mx0: true
+});
+expect(r).to.contain(&apos;-ssc&apos;);
+expect(r).to.contain(&apos;-ssw&apos;);
+expect(r).to.contain(&apos;-mx0&apos;);
+expect(r).to.contain(&apos;-y&apos;);</code>
+</code></pre>
+<p>should return complex values with spaces and quotes.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var r = switches({
+  ssc: true,
+  ssw: true,
+  m0: &apos;=BCJ&apos;,
+  m1: &apos;=LZMA:d=21&apos;,
+  p: &apos;My Super Pasw,&#xE0;&#xF9;&#xA3;*&apos;
+});
+expect(r).to.contain(&apos;-ssc&apos;);
+expect(r).to.contain(&apos;-ssw&apos;);
+expect(r).to.contain(&apos;-m0=BCJ&apos;);
+expect(r).to.contain(&apos;-m1=LZMA:d=21&apos;);
+expect(r).to.contain(&apos;-p&quot;My Super Pasw,&#xE0;&#xF9;&#xA3;*&quot;&apos;);
+expect(r).to.contain(&apos;-y&apos;);</code>
+</code></pre>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.7)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
