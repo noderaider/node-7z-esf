@@ -1,6 +1,6 @@
 {
   "name": "es-7z",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "An overhaul of node-7z.",
   "main": "lib/index.js",
   "keywords": [
