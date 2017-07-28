@@ -17,8 +17,10 @@ export default function (archive, dest, { exePath, ...options } = {}) {
 
     // Create a string that can be parsed by `run`.
     let command = exePath ? exePath : (/(rar)$/i.test(archive))? '7z' : '7za'
-    command += ' x "' + archive + '" -o"' + dest + '" '
-
+    command += ' x -r -y -bsp1 "' + archive + '" -o"' + dest + '" '
+    //   recursive-^   |    ^--- This makes it print the progress to node
+    //                  °.. Always assume "yes" (to overwrite and stuff)
+    
     // Start the command
     u.run(command, options)
 
@@ -26,12 +28,37 @@ export default function (archive, dest, { exePath, ...options } = {}) {
     // the pattern is found, extract the file (or directory) name from it and
     // pass it to an array. Finally returns this array.
     .progress(function (data) {
+      
+      // Examples of a line returned by 7za
+      // > Some random intro
+      // > 28% 1318 - Some path\with\a\file.extension
+
       var entries = []
-      data.split('\n').forEach(function (line) {
-        if (line.substr(0, 12) === 'Extracting  ') {
-          entries.push(line.substr(12, line.length).replace(path.sep, '/'))
+      
+      // Check if the line contains a status update
+      var statusline = /\d{1,3}\b%.*/.exec(data); 
+      if (statusline) {
+        // Extract the progress
+        // TODO: Return this progress directly instead of the progress() abstraction
+        // I just didn't want to mess with the rest of your code.
+        var progress = statusline[0].split("%")[0];
+        
+        // Extract the path
+        var pathline = /- (.)*/.exec(line);
+        if (pathline) {
+            var filepath = pathline[0].substring(2);
+            entries.push(filepath);
         }
-      })
+      }
+      
+      // If I were you, I'd return an object like this
+      /*
+      var ret = {
+        progress,
+        // TODO: Add filecount (sorry dude, I'm too lazy for that)
+        filepath
+      }
+      */
       return progress(entries)
     })
 
