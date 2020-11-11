@@ -6,7 +6,7 @@ import * as u from '../util'
  * Update content to an archive.
  * @promise Update
  * @param archive {string} Path to the archive.
- * @param files {string} Files to add.
+ * @param files {string} Files to update.
  * @param options {Object} An object of acceptables options to 7z bin.
  * @resolve {array} Arguments passed to the child-process.
  * @progress {array} Listed files and directories.

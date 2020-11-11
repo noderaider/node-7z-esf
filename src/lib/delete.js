@@ -5,7 +5,7 @@ import * as u from '../util'
  * Delete content to an archive.
  * @promise Delete
  * @param archive {string} Path to the archive.
- * @param files {string|array} Files to add.
+ * @param files {string|array} Files to delete.
  * @param options {Object} An object of acceptable options to 7za bin.
  * @resolve {array} Arguments passed to the child-process.
  * @reject {Error} The error as issued by 7-Zip.
